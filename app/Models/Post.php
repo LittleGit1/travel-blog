@@ -12,6 +12,10 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id', 'title', 'slug', 'body', 'featured_image_path'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -30,5 +34,10 @@ class Post extends Model
     public function likes(): HasMany
     {
         return $this->hasMany(PostLike::class);
+    }
+
+    public function carouselImages(): HasMany
+    {
+        return $this->hasMany(CarouselImage::class);
     }
 }

@@ -11,4 +11,4 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>{{ $title }}</title>
 </head>
-<body class="h-full bg-slate-50">
+<body class="h-full bg-slate-50 flex flex-col">

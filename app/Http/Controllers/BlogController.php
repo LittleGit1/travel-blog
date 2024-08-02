@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CarouselImage;
 use App\Models\Post;
 use App\Models\PostLike;
 use App\Models\User;
+use Illuminate\Validation\Rules\File;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class BlogController extends Controller
@@ -32,28 +35,41 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'title' => ['required'],
-            'body' => ['required']
+            'slug' => ['required'],
+            'body' => ['required'],
+            'featured_image' => 'required|image|mimes:jpeg,png,jpg|max:5120', // 5MB
+            'carousel_images.*' => 'image|mimes:jpeg,png,jpg|max:5120' // 5MB
         ]);
 
-        $newPost = new Post;
+        $featuredImage = $request->file('featured_image');
+        $featuredImageName = $featuredImage->getSize() . '_' . time() . '.' . $featuredImage->getClientOriginalExtension();
 
-        $newPost->title = $request->title;
-        $newPost->slug = "slug";
-        $newPost->body = $request->body;
-        $newPost->user_id = Auth()->user()->id;
-
-        $result = $newPost->save();
-
-        if (!$result) return back()->withInput([
+        $post = Post::create([
+            'user_id' => Auth::id(),
             'title' => $request->title,
-            'body' => $request->body,
-            'slug' => $request->slug
+            'slug'  => $request->slug,
+            'body'  => $request->body,
+            'featured_image_path' => $featuredImageName,
         ]);
 
-        return redirect('dashboard');
+        $featuredImage->move(public_path('img/posts/featured'), $featuredImageName);
+
+        if ($request->has('carousel_images')) {
+            foreach ($request->file('carousel_images') as $key => $image) {
+                $imageName = $image->getSize() . '_' . time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('img/posts/carousel'), $imageName);
+
+                CarouselImage::create([
+                    'post_id' => $post->id,
+                    'public_path' => $imageName,
+                ]);
+            }
+        }
+
+        // Need to handle the post created
+        return redirect('/account/posts')->with('success', 'Post created!');
     }
 
     /**
@@ -70,7 +86,8 @@ class BlogController extends Controller
             "userLiked" => !$isGuest && PostLike::where([
                     ['user_id', '=', Auth()->user()->id],
                     ['post_id', '=', $post->id]
-                ])->count() === 1
+                ])->count() === 1,
+            "carouselImages"    => $post->carouselImages
         ]);
     }
 
@@ -82,7 +99,7 @@ class BlogController extends Controller
         if (Auth()->user()->id !== $post->user->id) {
             return abort(401);
         }
-        return view('blog.edit', ['post' => $post]);
+        return view('blog.edit', ['post' => $post, "title" => "Edit post"]);
     }
 
     /**
@@ -117,11 +134,12 @@ class BlogController extends Controller
     public function destroy(Post $post)
     {
         $id = $post->user->id;
-        if (!Auth()->user()->id === $id)
-            return abort(401);
+        if (!Auth::user()->id === $id)
+            abort(401);
 
         $post->delete();
-        return redirect("/users/$id/posts");
+        //We need to delete the images that we have in the database.
+        return redirect("/account/posts");
     }
 
     public function index_user(User $user)

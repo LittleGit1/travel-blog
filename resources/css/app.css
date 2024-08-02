@@ -18,3 +18,13 @@
 html {
     font-family: 'Work Sans', sans-serif;
 }
+
+
+th, td {
+    padding: 0.5rem 0;
+}
+
+
+tr > td:first-child, tr > th:first-child {
+    padding-left: 0.5rem;
+}

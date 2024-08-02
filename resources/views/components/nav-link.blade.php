@@ -6,7 +6,7 @@
 @if($isIconLink)
     <li class="block">
         <a class="inline-block ml-4 my-[0.6rem]"
-           href="{{$requiresAuth && Auth::guest() ? route('login', ['redirect' => '/dashboard']) : $attributes['href']}}">
+           href="{{$requiresAuth && Auth::guest() ? route('login', ['redirect' => '/account/dashboard']) : $attributes['href']}}">
         {{ $slot }}
         </a>
     </li>

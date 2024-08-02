@@ -13,8 +13,9 @@
             </a>
         </nav>
         <div class="grid grid-cols-1 py-8 max-w-[640px] mx-auto rounded-md">
-            <figure class="overflow-hidden rounded-tl-md rounded-tr-md">
-                <img width="800" height="800" src="https://picsum.photos/1000" alt="">
+            <figure class="overflow-hidden rounded-tl-md rounded-tr-md w-full aspect-square">
+                <img width="800" height="800" src="{{asset('img/posts/featured/' . $post->featured_image_path)}}" alt=""
+                     class="w-full h-full object-cover">
             </figure>
             <div class="px-6 py-4 bg-gray-100 rounded-bl-md rounded-br-md">
                 <h1 class="text-2xl font-medium">{{ $post->title }}</h1>
@@ -41,6 +42,14 @@
             </div>
         </div>
     </div>
+    {{-- Image Carousel --}}
+    <div class="bg-indigo-300 py-24">
+        <div class="container mx-auto max-w-[640px]">
+            <x-carousel :images="$carouselImages"/>
+        </div>
+    </div>
+
+    {{-- Comments --}}
     <div id="comments" class="bg-sky-300 py-24">
         <div class="container mx-auto max-w-[640px] h-[500px] rounded-lg overflow-hidden" id="root">
             <livewire:comments postId="{{$post->id}}"/>

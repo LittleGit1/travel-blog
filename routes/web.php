@@ -25,7 +25,10 @@ Route::get('blog/posts/user/{user:external_id}', [BlogController::class, 'index_
 Route::post('blog/posts/{post}/like', [LikeController::class, 'like'])->middleware('auth');
 Route::post('blog/posts/{post}/comment', [CommentController::class, 'store'])->middleware('auth');
 
-Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('account/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('account/posts', [DashboardController::class, 'posts'])->middleware('auth');
+Route::get('account/users', [DashboardController::class, 'users'])->middleware(['auth', Admin::class]);
+
 
 Route::get('auth', [LoginController::class, 'create'])->middleware('guest')->name('login');
 Route::post('auth', [LoginController::class, 'authenticate'])->middleware('guest');

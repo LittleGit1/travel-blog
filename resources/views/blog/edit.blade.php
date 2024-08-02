@@ -1,7 +1,18 @@
-@include('partials.head', ['title' => 'Edit post'])
-@include('partials.nav')
+@extends('layout')
 
-<main class="container mx-auto bg-gray-100">
+@section('header')
+    <x-dashboard-header>
+        <div>
+            <ul>
+                <li>
+                    <a href="/blog/posts/create" class="bg-gray-50 hover:bg-gray-200 rounded-md px-4 py-3 inline-block">Create Post</a>
+                </li>
+            </ul>
+        </div>
+    </x-dashboard-header>
+@endsection
+
+@section('content')
     <form action="/blog/posts/{{$post->slug}}" method="POST" class="p-4 flex flex-col gap-y-2">
         @csrf
         @method('PUT')
@@ -22,10 +33,9 @@
             <textarea name="body" id="body" cols="30" rows="10">{{ $post->body }}</textarea>
         </div>
         <div>
-            <a class="rounded-md bg-red-500 text-white px-4 py-3 inline-block" href="/users/{{$post->user_id}}/posts">Cancel</a>
+            <a class="rounded-md bg-red-500 text-white px-4 py-3 inline-block" href="/account/posts">Cancel</a>
             <button class="border-0 rounded-md bg-green-500 text-white px-4 py-3" type="submit">Save</button>
         </div>
     </form>
-</main>
+@endsection
 
-@include('partials.footer')
