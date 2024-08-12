@@ -6,7 +6,6 @@ use App\Models\CarouselImage;
 use App\Models\Post;
 use App\Models\PostLike;
 use App\Models\User;
-use Illuminate\Validation\Rules\File;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,12 +13,13 @@ use Illuminate\View\View;
 
 class BlogController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
-        return view('blog.index', ["posts" => Post::with('user')->paginate(10)]);
+        return view('blog.index', ["posts" => Post::with('user')->orderBy('created_at')->paginate(9)]);
     }
 
     /**
@@ -82,11 +82,11 @@ class BlogController extends Controller
         return view('blog.show', [
             "title" => $post->title,
             "post" => $post,
-            "likes" => $post->likes->count(),
+            "hasFeaturedImage" => $post->featured_image_path,
             "userLiked" => !$isGuest && PostLike::where([
-                    ['user_id', '=', Auth()->user()->id],
-                    ['post_id', '=', $post->id]
-                ])->count() === 1,
+                ['user_id', '=', Auth()->user()->id],
+                ['post_id', '=', $post->id]
+            ])->count() === 1,
             "carouselImages"    => $post->carouselImages
         ]);
     }
@@ -94,11 +94,12 @@ class BlogController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit(Post $post, Request $request)
     {
-        if (Auth()->user()->id !== $post->user->id) {
+        if ($request->user()->cannot('edit', $post)) {
             return abort(401);
         }
+
         return view('blog.edit', ['post' => $post, "title" => "Edit post"]);
     }
 
@@ -107,6 +108,11 @@ class BlogController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
+        if ($request->user()->cannot('edit', $post)) {
+            return abort(401);
+        }
+
         $request->validate([
             'title' => ['required'],
             'slug' => ['required'],
@@ -131,8 +137,13 @@ class BlogController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post, Request $request)
     {
+
+        if ($request->user()->cannot('destroy', $post)) {
+            return abort(401);
+        }
+
         $id = $post->user->id;
         if (!Auth::user()->id === $id)
             abort(401);

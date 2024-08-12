@@ -1,10 +1,10 @@
 @props([
-    "isFirst" => false,
-    "title" => "",
-    "author" => []
+    'post' => null,
 ])
 
-<a class="p-4 rounded-xl bg-gray-100 {{$isFirst ? "col-span-3" : ""}}" {{$attributes}}>
-    <h3 class="text-lg font-medium">{{ $title }}</h3>
-    <h6 class="text-xs mt-2">{{ $author->name }}</h6>
+<a class="p-4 rounded-xl bg-gray-100 flex flex-col min-h-[150px]" href="/blog/posts/{{ $post->slug }}">
+    <h3 class="text-2xl font-medium grow">{{ $post->title }}</h3>
+    <span class="text-xs mt-2">
+        {{ $post->user->username }} | {{ $post->created_at->diffForHumans() }}
+    </span>
 </a>

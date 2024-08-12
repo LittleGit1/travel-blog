@@ -15,7 +15,7 @@
                     <span
                         class="text-xs font-medium">{{!is_null($comment->user) ? $comment->user->username : 'User'}}</span>
                     <span
-                        class="text-xs text-gray-500">{{\App\Helpers\DateHelper::getTimeago($comment->created_at)}}</span>
+                        class="text-xs text-gray-500">{{$comment->created_at->diffForHumans()}}</span>
                 </div>
 
                 <p class="text-sm">{{$comment->body}}</p>
@@ -68,7 +68,7 @@
                     <span
                         class="text-xs font-medium">{{!is_null($comment->user) ? $comment->user->username : 'User'}}</span>
                     <span
-                        class="text-xs text-gray-500">{{\App\Helpers\DateHelper::getTimeago($comment->created_at)}}</span>
+                        class="text-xs text-gray-500">{{$comment->created_at->diffForHumans()}}</span>
                 </div>
 
                 <p class="text-sm">{{$comment->body}}</p>
