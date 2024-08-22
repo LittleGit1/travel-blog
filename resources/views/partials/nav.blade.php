@@ -13,6 +13,7 @@
         <ul>
             <x-nav-link href="/">Home</x-nav-link>
             <x-nav-link href="/blog/posts">Blog</x-nav-link>
+            <x-nav-link href="/journey">Our Journey</x-nav-link>
         </ul>
 
         <ul>
