@@ -54,40 +54,11 @@ Route::get('auth', [LoginController::class, 'create'])->middleware('guest')->nam
 Route::post('auth', [LoginController::class, 'authenticate'])->middleware('guest');
 Route::delete('auth', [LoginController::class, 'destroy'])->middleware('auth');
 
-Route::get('signup', [UserController::class, 'create'])
-    ->middleware('guest')
-    ->name('signup');
+Route::get('signup', [UserController::class, 'create'])->middleware('guest')->name('signup');
+Route::post('signup', [UserController::class, 'store'])->middleware('guest');
 
-Route::post('signup', [UserController::class, 'store'])
-    ->middleware('guest');
-
-Route::get('admin', function () {
-    return view('admin.dashboard.index', [
-        'title' => "Dashboard"
-    ]);
-})->middleware(['auth', Admin::class]);
-
-Route::get(
-    'account/categories',
-    [PostCategoryController::class, 'index']
-)->middleware(['auth', Admin::class]);
-
-Route::get(
-    'account/categories/create',
-    [PostCategoryController::class, 'create']
-)->middleware(['auth', Admin::class]);
-
-Route::post(
-    'account/categories/create',
-    [PostCategoryController::class, 'store']
-)->middleware(['auth', Admin::class]);
-
-Route::put(
-    'account/categories/{slug}',
-    [PostCategoryController::class, 'update']
-)->middleware(['auth', Admin::class]);
-
-Route::get(
-    'account/categories/{slug}/edit',
-    [PostCategoryController::class, 'edit']
-)->middleware(['auth', Admin::class]);
+Route::get('account/categories', [PostCategoryController::class, 'index'])->middleware(['auth', Admin::class]);
+Route::get('account/categories/create', [PostCategoryController::class, 'create'])->middleware(['auth', Admin::class]);
+Route::post('account/categories/create', [PostCategoryController::class, 'store'])->middleware(['auth', Admin::class]);
+Route::put('account/categories/{slug}', [PostCategoryController::class, 'update'])->middleware(['auth', Admin::class]);
+Route::get('account/categories/{slug}/edit', [PostCategoryController::class, 'edit'])->middleware(['auth', Admin::class]);
