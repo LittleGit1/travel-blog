@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\PostCategory;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,9 @@ class PostCategoryController
      */
     public function index()
     {
-        return view('admin.blog-categories.index', [
+        return view('dashboard.blog-categories.index', [
             'title' => "Manage Categories",
-            'categories' => PostCategory::all(),
+            'categories' => Category::all(),
         ]);
     }
 
@@ -23,7 +24,7 @@ class PostCategoryController
      */
     public function create()
     {
-        return view('admin.blog-categories.create', [
+        return view('dashboard.blog-categories.create', [
             'title' => "Create Post "
         ]);
     }
@@ -38,7 +39,7 @@ class PostCategoryController
             'slug'  => ['required']
         ]);
 
-        if (PostCategory::where([
+        if (Category::where([
             ['title', '=', $request->title],
             ['slug', '=', $request->slug]
         ])->count() > 0) {
@@ -50,7 +51,7 @@ class PostCategoryController
             );
         }
 
-        PostCategory::factory()->create([
+        Category::factory()->create([
             'title' => $request->title,
             'slug'  => $request->slug
         ]);
@@ -61,9 +62,7 @@ class PostCategoryController
     /**
      * Display the specified resource.
      */
-    public function show(PostCategory $postCategory)
-    {
-    }
+    public function show(Category $postCategory) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -72,11 +71,11 @@ class PostCategoryController
     {
         //Diagnose route model binding
 
-        $category = PostCategory::where('slug', '=', $postCategory)->first();
+        $category = Category::where('slug', '=', $postCategory)->first();
 
         if (!$category) return abort(404);
 
-        return view('admin.blog-categories.edit', [
+        return view('dashboard.blog-categories.edit', [
             "title"     => "Edit Category",
             "category"  => $category
         ]);
@@ -92,11 +91,11 @@ class PostCategoryController
             'slug'  => ['required']
         ]);
 
-        $category = PostCategory::where('id', '=', $postCategory);
+        $category = Category::where('id', '=', $postCategory);
 
-        if(!$category) return abort(404);
+        if (!$category) return abort(404);
 
-        PostCategory::where('slug', '=', $postCategory)->update([
+        Category::where('slug', '=', $postCategory)->update([
             'title' => $request->title,
             'slug'  => $request->slug
         ]);
@@ -107,7 +106,7 @@ class PostCategoryController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PostCategory $postCategory)
+    public function destroy(Category $postCategory)
     {
         //
     }

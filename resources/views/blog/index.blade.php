@@ -2,8 +2,8 @@
 @include('partials.nav')
 
 <main class="container mx-auto flex flex-col flex-1 py-4">
-    <div class="grow">
-        <ul class="grid grid-cols-3 gap-3 py-4">
+    <div class="flex flex-1 flex-col">
+        <ul class="grid grid-cols-3 gap-3 py-4 grow">
             @foreach ($posts as $post)
                 @if ($loop->first)
                     <x-blog-article :isFirst="true" :post="$post" />

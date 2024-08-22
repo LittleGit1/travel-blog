@@ -13,7 +13,11 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'title', 'slug', 'body', 'featured_image_path'
+        'user_id',
+        'title',
+        'slug',
+        'body',
+        'featured_image_path'
     ];
 
     public function user(): BelongsTo
@@ -23,7 +27,7 @@ class Post extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(PostCategory::class, table: "post_category");
+        return $this->belongsToMany(Category::class, table: "post_categories");
     }
 
     public function comments(): HasMany

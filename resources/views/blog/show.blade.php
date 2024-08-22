@@ -21,7 +21,7 @@
                 </figure>
             @else
                 <figure class="overflow-hidden rounded-tl-md rounded-tr-md w-full aspect-square">
-                    <img width="800" height="800" src="https://picsum.photos/800nav" alt=""
+                    <img width="800" height="800" src="https://picsum.photos/800" alt=""
                         class="w-full h-full object-cover">3
                 </figure>
             @endif
@@ -37,10 +37,22 @@
                 <div class="mt-2 flex gap-x-2" x-data="postShow">
                     <x-like-button :userLiked="$userLiked" postId="{{ $post->id }}"></x-like-button>
                     <x-comment-button @click="scrollIntoView"></x-comment-button>
-                    <x-location-button @click="showMap" />
+                    <x-location-button @click="showMap"></x-location-button>
+
+                    @if ($categories->count() > 0)
+                        <ul class="flex gap-2">
+                            @foreach ($categories as $category)
+                                <li>
+                                    <x-category-pill :category="$category" :asLink="true"></x-category-pill>
+                                </li>
+                            @endforeach
+                        </ul>
+
+                    @endif
+
                 </div>
 
-                <p class="mt-6">{{ $post->body }}</p>
+                <p class="mt-6">{!! nl2br(e($post->body)) !!}</p>
             </div>
         </div>
     </div>

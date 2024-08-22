@@ -14,8 +14,11 @@
 @endsection
 
 @section('content')
-    <form x-data="createPost" action="/blog/posts/create" method="POST" enctype="multipart/form-data">
+    <form x-data="createPost" @submit.prevent="onSubmit" action="/blog/posts/create" method="POST"
+        enctype="multipart/form-data">
         @csrf
+
+        @dump($errors)
 
         @if ($errors->count() > 0)
             <span class="bg-white font-medium rounded-xl block px-4 py-4 mb-4 text-red-600">There was a problem submitting
@@ -29,6 +32,9 @@
                     <x-svg-icon icon_name="image_thumbnail" />
                     <span>Featured Image</span>
                 </div>
+                @if ($errors->has('featured_image'))
+                    <span class="block text-red-600 text-sm pt-1">{{ $errors->first('featured_image') }}</span>
+                @endif
                 <div>
                     <label class="inline-block relative group cursor-pointer" for="featured_image">
                         <img id="featured_image_display" src="{{ asset('img/placeholder.webp') }}" width="256px"
@@ -62,6 +68,20 @@
             </div>
         </div>
 
+        <div class="pt-4">
+            <div class="flex gap-2">
+                @foreach ($categories as $category)
+                    <button id="{{ $category->id }}" draggable="true" @dragstart="onDragStart" type="button"
+                        class="rounded-full inline-flex bg-gray-200 px-3 py-2"
+                        @click="addCategory({{ $category->id }})">{{ $category->title }}</button>
+                @endforeach
+            </div>
+
+            <div class="h-16 flex gap-2 items-center px-4 mt-4 bg-white rounded-xl" @drop="onDrop" @dragover="onDragOver">
+
+            </div>
+        </div>
+
         {{-- Title, Slug, Body --}}
         <div class="flex flex-col gap-y-4 py-4">
             <div class="flex flex-col">
@@ -81,10 +101,10 @@
             </div>
 
             <div class="flex flex-col">
-                <textarea aria-label="body" name="body" id="body" placeholder="Content" cols="30" rows="10"
-                    class="rounded-xl p-4 resize-none">{{ old('body') ?? '' }}</textarea>
-                @if ($errors->has('body'))
-                    <span class="block text-red-600 text-sm px-4 pt-1">{{ $errors->first('body') }}</span>
+                <textarea aria-label="content" name="content" id="content" placeholder="Content" cols="30" rows="10"
+                    class="rounded-xl p-4 resize-none">{{ old('content') ?? '' }}</textarea>
+                @if ($errors->has('content'))
+                    <span class="block text-red-600 text-sm px-4 pt-1">{{ $errors->first('content') }}</span>
                 @endif
             </div>
         </div>
@@ -100,12 +120,11 @@
         Alpine.data('createPost', () => ({
             featuredImageInput: undefined,
             featuredImageDisplay: undefined,
-            featuredImageTooLarge: false,
             carouselImagesInput: undefined,
-            //carouselErrorMessage: undefined,
-            //showCarouselErrorMessage: undefined,
             carouselContainer: undefined,
             carouselImages: undefined,
+
+            categories: [],
 
             init() {
                 this.featuredImageInput = document.getElementById('featured_image');
@@ -125,32 +144,13 @@
             handleImages(event) {
                 switch (event.target.id) {
                     case "featured_image":
-                        const file = event.target.files[0];
-                        if (file.size > 3000000) {
-                            this.featuredImageTooLarge = true
-                            return;
-                        }
-                        this.featuredImageTooLarge = false;
                         this.featuredImageDisplay.src = URL.createObjectURL(event.target.files[0])
                         break;
 
                     case "carousel_images":
-                        //this.showCarouselErrorMessage = false;
-                        //this.carouselErrorMessage = "";
-
                         const files = event.target.files;
 
-                        // restrict the number of files to 5
-                        // if (files.length > 5) {
-                        //     //this.carouselErrorMessage = "A maximum of five images can be uploaded."
-                        //     //this.showCarouselErrorMessage = true;
-                        //     return;
-                        // }
-
                         for (let i = 0; i < files.length; i++) {
-                            // don't accept images over 3MB in size
-                            if (files[i].size > 3000000) continue;
-
                             this.carouselContainer.appendChild(this.createImageComponent(files[i],
                                 files[i].name));
                             this.carouselContainer.classList.add('flex');
@@ -188,7 +188,7 @@
                 const path = document.createElementNS(svgNS, 'path');
                 path.setAttribute('d',
                     'm14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0'
-                    );
+                );
 
                 // Append the path to the SVG
                 svg.appendChild(path);
@@ -249,6 +249,32 @@
                     this.carouselContainer.appendChild(this.createImageComponent(files[i], files[i]
                         .name));
 
+            },
+
+            onDragOver(event) {
+                event.preventDefault();
+            },
+
+            onDrop(event) {
+                event.preventDefault();
+                var data = event.dataTransfer.getData("category");
+                event.target.appendChild(document.getElementById(data));
+                this.categories.push(data);
+            },
+
+            onDragStart(event) {
+                event.dataTransfer.setData("category", event.target.id);
+            },
+
+            onSubmit(event) {
+                if (this.categories.length > 0) {
+                    const input = document.createElement('input');
+                    input.type = "hidden"
+                    input.name = "categories[]"
+                    input.value = this.categories;
+                    event.target.appendChild(input)
+                }
+                event.target.submit();
             }
 
         }))

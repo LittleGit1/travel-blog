@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
-use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
-class PostCategoryFactory extends Factory
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PostCategory>
+ */
+class CategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,8 @@ class PostCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'post_id' => Post::all()->random()->first()->id,
-            'category_id'   => Category::all()->random()->first()->id
+            "title"     => fake()->text(20),
+            "slug"      => fake()->slug(),
         ];
     }
 }

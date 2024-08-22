@@ -1,4 +1,5 @@
-<button class="rounded-full inline-flex justify-center items-center gap-2 bg-gray-200 w-10 h-10">
+<button
+    class="rounded-full inline-flex justify-center items-center gap-2 bg-gray-200 w-9 h-9 hover:bg-white transition-color duration-[0.3s]">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="size-6">
         <path stroke-linecap="round" stroke-linejoin="round"
