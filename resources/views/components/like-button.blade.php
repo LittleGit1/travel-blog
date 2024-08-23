@@ -19,18 +19,23 @@
 
             sendToggleRequest() {
 
-                this.liked = !this.liked;
-
                 this.makeRequest()
                     .then((res) => {
+
                         if (res.status === 401 || res.status === 419)
                             return window.location.href =
                                 "{{ route('login', ['redirect' => url()->current()]) }}"
+
+                        res.json()
+                            .then((data) => {
+                                if (data.liked) this.liked = true;
+                                else this.liked = false;
+                            })
                     })
             },
 
             makeRequest() {
-                return fetch(`http://travel-blog.test/blog/posts/{{ $postId }}/like`, {
+                return fetch(`/api/blog/posts/{{ $postId }}/like`, {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",
