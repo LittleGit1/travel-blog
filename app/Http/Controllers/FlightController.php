@@ -3,28 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\GenerateGeojson;
-use App\Models\Country;
 use App\Models\Flight;
 use Illuminate\Http\Request;
 
-class JourneyController
+class FlightController
 {
-    public function index()
-    {
-        return view('dashboard.journey.index', [
-            'title' => "Journey",
-            'flights' => Flight::orderBy('created_at', 'ASC')->get(),
-            'countries' => Country::with('cities')->orderBy('created_at', "ASC")->get(),
-        ]);
-    }
 
-    public function flight_create()
+    public function create()
     {
         return view('dashboard.journey.flights.create');
     }
 
 
-    public function flight_store(Request $request)
+    public function store(Request $request)
     {
         $values = $request->validate([
             'origin_name'   => 'required',
@@ -51,14 +42,14 @@ class JourneyController
         return redirect('account/journey')->with('success', "Successfully created flight.");
     }
 
-    public function flight_edit(Flight $flight)
+    public function edit(Flight $flight)
     {
         return view('dashboard.journey.flights.edit', [
             'flight' => $flight
         ]);
     }
 
-    public function flight_update(Request $request, Flight $flight)
+    public function update(Request $request, Flight $flight)
     {
         $values = $request->validate([
             'origin_name'   => 'required',
@@ -83,7 +74,7 @@ class JourneyController
         return redirect('account/journey');
     }
 
-    public function flight_destroy(Flight $flight)
+    public function destroy(Flight $flight)
     {
         //Make a policy for this 
         $flight->delete();

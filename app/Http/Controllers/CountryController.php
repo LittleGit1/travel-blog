@@ -54,12 +54,18 @@ class CountryController
         return view('dashboard.journey.countries.edit', ['country' => $country, 'cities' => json_encode($country->cities)]);
     }
 
-    public function update(Request $request, Country $country) {}
+    public function update(Request $request, Country $country)
+    {
+        GenerateGeojson::dispatch();
+    }
 
     public function destroy(Country $country)
     {
         //policy??
         $country->delete();
+
+        GenerateGeojson::dispatch();
+
         return redirect('/account/journey');
     }
 }
