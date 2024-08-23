@@ -30,14 +30,13 @@ class Comment extends Component
 
         if (!Auth::guest()) {
             $this->userLiked = CommentLike::where([
-                    ['user_id', Auth::id()],
-                    ['post_comment_id', $this->comment->id],
-                ])->count() > 0;
+                ['user_id', Auth::id()],
+                ['post_comment_id', $this->comment->id],
+            ])->count() > 0;
         }
 
         if ($this->comment->parent_id != null)
             $this->isReply = true;
-
     }
 
     public function render()
@@ -58,7 +57,6 @@ class Comment extends Component
 
             $this->likes = CommentLike::where('post_comment_id', $this->comment->id)->count();
             $this->userLiked = true;
-
         } else {
             CommentLike::where([
                 ['post_comment_id', $this->comment->id],
@@ -67,8 +65,6 @@ class Comment extends Component
             $this->likes = CommentLike::where('post_comment_id', $this->comment->id)->count();
             $this->userLiked = false;
         }
-
-
     }
 
     public function submitComment()
@@ -77,15 +73,13 @@ class Comment extends Component
             "commentBody"  => "required"
         ]);
 
-        $newComment = new PostComment;
-
-        $newComment->parent_id = $this->comment->id;
-        $newComment->user_id = Auth::user()->id;
-        $newComment->post_id = $this->comment->post->id;
-        $newComment->body = $this->commentBody;
-        $newComment->save();
+        PostComment::create([
+            'parent_id' => $this->comment->id,
+            'user_id'   => Auth::user()->id,
+            'post_id'   => $this->comment->post->id,
+            'comment'      => $this->commentBody
+        ]);
 
         $this->commentBody = "";
-
     }
 }

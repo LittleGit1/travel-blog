@@ -1,41 +1,41 @@
-<div x-init="observe({{$observe}})">
-    @if(!$isReply)
-        <div x-data="{ showReplies: false, showReplyForm: false}" class="flex gap-3 bg-white rounded-lg p-3">
+<div x-init="observe({{ $observe }})">
+    @if (!$isReply)
+        <div x-data="{ showReplies: false, showReplyForm: false }" class="flex gap-3 bg-white rounded-lg p-3">
 
-            @if(!is_null($comment->user))
+            @if (!is_null($comment->user))
                 <img class="rounded-full w-10 h-10 object-cover select-none" src="https://picsum.photos/30" alt="">
             @else
                 <img class="rounded-full w-10 h-10 object-cover select-none"
-                     src="{{asset('/img/avatar_placeholder.png')}}" alt="">
+                    src="{{ asset('/img/avatar_placeholder.png') }}" alt="">
             @endif
 
             <div class="grow">
 
                 <div class="flex gap-x-1 pb-1">
                     <span
-                        class="text-xs font-medium">{{!is_null($comment->user) ? $comment->user->username : 'User'}}</span>
-                    <span
-                        class="text-xs text-gray-500">{{$comment->created_at->diffForHumans()}}</span>
+                        class="text-xs font-medium">{{ !is_null($comment->user) ? $comment->user->username : 'User' }}</span>
+                    <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
                 </div>
 
-                <p class="text-sm">{{$comment->body}}</p>
+                <p class="text-sm">{{ $comment->comment }}</p>
 
                 <div class="flex gap-x-2">
                     @auth
                         <span @click="showReplyForm = !showReplyForm"
-                              class="cursor-pointer text-xs text-gray-600 font-medium inline-block mt-1 select-none">Reply</span>
+                            class="cursor-pointer text-xs text-gray-600 font-medium inline-block mt-1 select-none">Reply</span>
                     @endauth
 
-                    @if(count($comment->replies) > 0)
+                    @if (count($comment->replies) > 0)
                         <span @click="showReplies = !showReplies"
-                              class="cursor-pointer text-xs text-gray-600 font-medium inline-block my-1 select-none">View replies...</span>
+                            class="cursor-pointer text-xs text-gray-600 font-medium inline-block my-1 select-none">View
+                            replies...</span>
                     @endif
 
                 </div>
 
-                @if(count($comment->replies) > 0)
+                @if (count($comment->replies) > 0)
                     <ul x-show="showReplies" class="flex flex-col gap-2 mt-3">
-                        @foreach($comment->replies as $reply)
+                        @foreach ($comment->replies as $reply)
                             <livewire:comment :observe="false" :comment="$reply" :key="$reply->id"></livewire:comment>
                         @endforeach
                     </ul>
@@ -55,28 +55,28 @@
     @else
         <div class="flex gap-3 bg-white rounded-lg py-1">
 
-            @if(!is_null($comment->user))
-                <img class="rounded-full w-10 h-10 object-cover select-none" src="https://picsum.photos/30" alt="">
+            @if (!is_null($comment->user))
+                <img class="rounded-full w-10 h-10 object-cover select-none" src="https://picsum.photos/30"
+                    alt="">
             @else
                 <img class="rounded-full w-10 h-10 object-cover select-none"
-                     src="{{asset('/img/avatar_placeholder.png')}}" alt="">
+                    src="{{ asset('/img/avatar_placeholder.png') }}" alt="">
             @endif
 
             <div class="grow">
 
                 <div class="flex gap-x-1 pb-1">
                     <span
-                        class="text-xs font-medium">{{!is_null($comment->user) ? $comment->user->username : 'User'}}</span>
-                    <span
-                        class="text-xs text-gray-500">{{$comment->created_at->diffForHumans()}}</span>
+                        class="text-xs font-medium">{{ !is_null($comment->user) ? $comment->user->username : 'User' }}</span>
+                    <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
                 </div>
 
-                <p class="text-sm">{{$comment->body}}</p>
+                <p class="text-sm">{{ $comment->comment }}</p>
 
                 <div class="flex gap-x-2">
                     @auth
                         <span @click="showReplyForm = !showReplyForm"
-                              class="cursor-pointer text-xs text-gray-600 font-medium inline-block mt-1 select-none">Reply</span>
+                            class="cursor-pointer text-xs text-gray-600 font-medium inline-block mt-1 select-none">Reply</span>
                     @endauth
                 </div>
 
@@ -87,4 +87,3 @@
         </div>
     @endif
 </div>
-

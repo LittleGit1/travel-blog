@@ -6,14 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
 
 class PostComment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['post_id', 'body'];
+    protected $fillable = [
+        'post_id',
+        'user_id',
+        'parent_id',
+        'comment'
+    ];
 
     public function post(): BelongsTo
     {
@@ -39,5 +42,4 @@ class PostComment extends Model
     {
         return $this->hasMany(CommentLike::class);
     }
-
 }
