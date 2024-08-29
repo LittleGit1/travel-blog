@@ -19,14 +19,11 @@ class LoginController extends Controller
 
     function destroy()
     {
-        if(!Auth()->user())
-           return abort(401);
-
         Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return redirect('/blog/posts');
+        return redirect('/');
     }
 
     function authenticate(Request $request)
@@ -36,7 +33,7 @@ class LoginController extends Controller
             "password" => ['required']
         ]);
 
-        if(Auth::attempt($credentials)){
+        if (Auth::attempt($credentials)) {
 
             $url = null;
             if (session()->has("url.intended"))
@@ -44,10 +41,9 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            if(!$url) return redirect()->intended('blog/posts');
+            if (!$url) return redirect()->intended('blog/posts');
 
             return redirect()->intended($url);
-
         }
 
         return back()->withErrors(['email' => 'The provided credentials do not match our records.'])->onlyInput('email');

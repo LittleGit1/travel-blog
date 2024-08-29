@@ -5,8 +5,7 @@
         <div>
             <ul>
                 <li>
-                    <a href="/account/dashboard"
-                        class="bg-gray-50 hover:bg-gray-200 rounded-md px-4 py-3 inline-block">Dashboard</a>
+                    <a href="/account" class="bg-gray-50 hover:bg-gray-200 rounded-md px-4 py-3 inline-block">Dashboard</a>
                 </li>
             </ul>
         </div>

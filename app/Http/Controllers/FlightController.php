@@ -11,7 +11,7 @@ class FlightController
 
     public function create()
     {
-        return view('dashboard.journey.flights.create');
+        return view('account.journey.flights.create');
     }
 
 
@@ -44,7 +44,7 @@ class FlightController
 
     public function edit(Flight $flight)
     {
-        return view('dashboard.journey.flights.edit', [
+        return view('account.journey.flights.edit', [
             'flight' => $flight
         ]);
     }

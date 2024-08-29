@@ -11,9 +11,14 @@ class BlogController
 {
     public function post_like(Post $post)
     {
+
         $userId = Auth::user()->getAuthIdentifier();
 
-        $like = PostLike::all()->where('user_id', $userId)->where('post_id', $post->id)->first();
+        $like = PostLike::where([
+            ['post_id', '=', $post->id],
+            ['user_id', '=', Auth::user()->id]
+        ])
+            ->first();
 
         if (!is_null($like)) {
             $like->delete();
@@ -26,5 +31,21 @@ class BlogController
         ]);
 
         return response()->json(["success" => true, "liked" => true], 200);
+    }
+
+    public function user_has_liked(Post $post)
+    {
+
+        if (Auth::guest()) return response()->json(["liked" => false], 200);
+
+        $like = PostLike::where([
+            ['post_id', '=', $post->id],
+            ['user_id', '=', Auth::user()->id]
+        ])
+            ->first();
+
+        if (is_null($like)) return response()->json(["liked" => false], 200);
+
+        return response()->json(["liked" => true], 200);
     }
 }

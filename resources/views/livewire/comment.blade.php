@@ -2,11 +2,12 @@
     @if (!$isReply)
         <div x-data="{ showReplies: false, showReplyForm: false }" class="flex gap-3 bg-white rounded-lg p-3">
 
-            @if (!is_null($comment->user))
-                <img class="rounded-full w-10 h-10 object-cover select-none" src="https://picsum.photos/30" alt="">
+            @if (!Auth::guest() && !empty(Auth::user()->avatar))
+                <img class="rounded-full w-10 h-10 object-cover select-none"
+                    src="{{ Storage::url(Auth::user()->avatar) }}" alt="">
             @else
                 <img class="rounded-full w-10 h-10 object-cover select-none"
-                    src="{{ asset('/img/avatar_placeholder.png') }}" alt="">
+                    src="{{ Storage::url('public/img/placeholder.png') }}" alt="">
             @endif
 
             <div class="grow">
@@ -55,12 +56,12 @@
     @else
         <div class="flex gap-3 bg-white rounded-lg py-1">
 
-            @if (!is_null($comment->user))
-                <img class="rounded-full w-10 h-10 object-cover select-none" src="https://picsum.photos/30"
-                    alt="">
+            @if (!Auth::guest() && !empty(Auth::user()->avatar))
+                <img class="rounded-full w-10 h-10 object-cover select-none"
+                    src="{{ Storage::url(Auth::user()->avatar) }}" alt="">
             @else
                 <img class="rounded-full w-10 h-10 object-cover select-none"
-                    src="{{ asset('/img/avatar_placeholder.png') }}" alt="">
+                    src="{{ Storage::url('public/img/placeholder.png') }}" alt="">
             @endif
 
             <div class="grow">

@@ -104,17 +104,11 @@ class BlogController extends Controller
      */
     public function show(Post $post): View
     {
-        $isGuest = Auth()->guest();
-
         return view('blog.show', [
             "title" => $post->title,
             "post" => $post,
             "categories" => $post->categories()->get(),
             "hasFeaturedImage" => $post->featured_image_path,
-            "userLiked" => !$isGuest && PostLike::where([
-                ['user_id', '=', Auth()->user()->id],
-                ['post_id', '=', $post->id]
-            ])->count() === 1,
             "carouselImages"    => $post->carouselImages
         ]);
     }

@@ -1,6 +1,5 @@
 @props([
     'postId' => null,
-    'userLiked' => null,
 ])
 
 <button x-data="likeButton" @click="sendToggleRequest"
@@ -15,7 +14,16 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('likeButton', () => ({
-            liked: Boolean({{ $userLiked }}),
+
+            liked: undefined,
+
+            init() {
+                axios
+                    .get('/api/blog/posts/{{ $postId }}/liked')
+                    .then((response) => {
+                        this.liked = response.data.liked
+                    })
+            },
 
             sendToggleRequest() {
 
@@ -28,6 +36,7 @@
 
                         res.json()
                             .then((data) => {
+                                console.log(data)
                                 if (data.liked) this.liked = true;
                                 else this.liked = false;
                             })

@@ -5,9 +5,11 @@
                 <livewire:comment :comment="$comment" :observe="$loop->last" wire:key="comment-{{ $comment->id }}" />
             @endforeach
         </div>
-        <div class="bg-white px-4 py-4">
-            <x-post-comment-form />
-        </div>
+        @if (Auth::user())
+            <div class="bg-white px-4 py-4">
+                <x-post-comment-form />
+            </div>
+        @endif
     </div>
     <div class="{{ count($items) === 0 ? 'block' : 'hidden' }} h-full">
         <x-no-comments />

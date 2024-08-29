@@ -10,3 +10,4 @@ Route::get('maps/mapdata', function (Request $request) {
 });
 
 Route::post('blog/posts/{post}/like', [BlogController::class, 'post_like'])->middleware('auth');
+Route::get('blog/posts/{post}/liked', [BlogController::class, 'user_has_liked']);

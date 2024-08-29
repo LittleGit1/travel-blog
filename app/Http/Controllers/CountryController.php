@@ -11,7 +11,7 @@ class CountryController
 {
     public function create()
     {
-        return view('dashboard.journey.countries.create');
+        return view('account.journey.countries.create');
     }
 
     public function store(Request $request)
@@ -51,7 +51,7 @@ class CountryController
 
     public function edit(Country $country)
     {
-        return view('dashboard.journey.countries.edit', ['country' => $country, 'cities' => json_encode($country->cities)]);
+        return view('account.journey.countries.edit', ['country' => $country, 'cities' => json_encode($country->cities)]);
     }
 
     public function update(Request $request, Country $country)

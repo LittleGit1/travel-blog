@@ -13,7 +13,7 @@ class PostCategoryController
      */
     public function index()
     {
-        return view('dashboard.blog-categories.index', [
+        return view('account.blog-categories.index', [
             'title' => "Manage Categories",
             'categories' => Category::all(),
         ]);
@@ -24,7 +24,7 @@ class PostCategoryController
      */
     public function create()
     {
-        return view('dashboard.blog-categories.create', [
+        return view('account.blog-categories.create', [
             'title' => "Create Post "
         ]);
     }
@@ -75,7 +75,7 @@ class PostCategoryController
 
         if (!$category) return abort(404);
 
-        return view('dashboard.blog-categories.edit', [
+        return view('account.blog-categories.edit', [
             "title"     => "Edit Category",
             "category"  => $category
         ]);

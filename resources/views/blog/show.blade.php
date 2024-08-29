@@ -4,7 +4,7 @@
 <main>
     <div class="container mx-auto relative">
         <nav class="fixed left-10 bottom-10 z-[1]">
-            <a href="/blog/posts" class="rounded-full w-16 h-16 bg-gray-500 flex justify-center items-center">
+            <a href="{{ url()->previous() }}" class="rounded-full w-16 h-16 bg-gray-500 flex justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff"
                     class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -28,16 +28,15 @@
             <div class="px-6 py-4 bg-gray-100 rounded-bl-md rounded-br-md">
                 <h1 class="text-2xl font-medium">{{ $post->title }}</h1>
                 <div class="inline-block mt-2">
-                    <a href="/blog/posts/user/{{ $post->user->external_id }}"
+                    <a href="/blog/posts/user/{{ $post->user->username }}"
                         class="text-xs mt-3">{{ $post->user->username }}</a>
                     <span class="text-xs mt-3"> |
                         <span>{{ $post->created_at->diffForHumans() }}</span></span>
                 </div>
 
                 <div class="mt-2 flex gap-x-2" x-data="postShow">
-                    <x-like-button :userLiked="$userLiked" postId="{{ $post->id }}"></x-like-button>
+                    <x-like-button postId="{{ $post->id }}"></x-like-button>
                     <x-comment-button @click="scrollIntoView"></x-comment-button>
-                    <x-location-button @click="showMap"></x-location-button>
 
                     @if ($categories->count() > 0)
                         <ul class="flex gap-2">

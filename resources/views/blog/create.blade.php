@@ -5,8 +5,7 @@
         <div>
             <ul>
                 <li>
-                    <a href="/account/dashboard"
-                        class="bg-gray-50 hover:bg-gray-200 rounded-md px-4 py-3 inline-block">Dashboard</a>
+                    <a href="/account" class="bg-gray-50 hover:bg-gray-200 rounded-md px-4 py-3 inline-block">Dashboard</a>
                 </li>
             </ul>
         </div>
@@ -37,8 +36,8 @@
                 @endif
                 <div>
                     <label class="inline-block relative group cursor-pointer" for="featured_image">
-                        <img id="featured_image_display" src="{{ asset('img/placeholder.webp') }}" width="256px"
-                            height="256px" alt="" class="w-64 h-64 object-cover">
+                        <img id="featured_image_display" src="{{ Storage::url('public/img/placeholder.png') }}"
+                            width="256px" height="256px" alt="" class="w-64 h-64 object-cover">
                         <span
                             class="w-full min-w-full min-h-full h-full absolute top-0 left-0 items-center bg-[rgba(0,0,0,0.6)] opacity-0 justify-center flex transition-[opacity] duration-300 group-hover:opacity-[0.6]"><x-svg-icon
                                 icon_name="image_thumbnail" size="size-10" stroke_color="white" /></span>
